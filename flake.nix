@@ -99,10 +99,15 @@
           shellAliases = {
             update = "darwin-rebuild switch --flake ~/.config/nix";
           };
-          initExtra = ''
-            set -e SSH_AGENT_PID
-            set -x GPG_TTY $(tty)
-            set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket) 
+          #initExtra = ''
+          #  set -e SSH_AGENT_PID
+          #  set -x GPG_TTY $(tty)
+          #  set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket)
+          #  set +x
+          #'';
+
+          profileExtra = ''
+              export GPG_TTY=$(tty)
           '';
           oh-my-zsh = {
             enable = true;
@@ -142,6 +147,16 @@
 
       programs.git = {
         enable = true;
+        
+        userEmail = "daniel.boman@pm.me";
+        userName = "Daniel Boman";
+
+        signing = {
+          signByDefault = true;
+          key = "C30B 055A 68C6 D657 1EF0  6133 5928 A043 6DB7 7DA6";
+        };
+
+
 
       };
     };
