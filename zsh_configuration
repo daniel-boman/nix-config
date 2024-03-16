@@ -122,6 +122,7 @@ fpath=($HOME/.nix-profile/share/zsh/site-functions $fpath)
 # Nix
 if [ -e '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh' ]; then
   . '/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh'
+  export PATH="$PATH:/run/current-system-sw/bin"
 fi
 # End Nix
 

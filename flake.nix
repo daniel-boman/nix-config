@@ -30,7 +30,7 @@
       nix.settings.experimental-features = "nix-command flakes";
 
       # Create /etc/zshrc that loads the nix-darwin environment.
-      # programs.zsh.enable = true;
+      programs.zsh.enable = true;
       # programs.fish.enable = true;
 
       environment.systemPackages = [ 
@@ -39,6 +39,7 @@
           pkgs.neofetch 
           pkgs.zsh 
           pkgs.oh-my-zsh
+          #pkgs.zsh-autosuggestions
       ];
 
   
@@ -82,35 +83,66 @@
       
       home = {
         file = {
-          ".zshrc" = {
-            source = ./zsh_configuration;
-          };
-          ".zshenv" = {
-            source = ./zsh_env;
-          };
+          #".zshrc" = {
+          #  source = ./zsh_configuration;
+          #};
+          #".zshenv" = {
+          #  source = ./zsh_env;
+          #};
         };
       };
 
       programs.zsh = {
           enable = true;
+          autosuggestion.enable = true;
+          syntaxHighlighting.enable = true;
           shellAliases = {
             update = "darwin-rebuild switch --flake ~/.config/nix";
           };
-             
-          # oh-my-zsh = {
-          #   enable = true;
-          #   plugins = [
-          #     "git"
-          #     "history"
-          #     "history-substring-search"
-          #     "golang"
-          #     "rust"
-          #     "docker"
-          #     "zsh-autosuggestions"
-          #     "ssh-agent"
-          #   ];
-          #   theme = "af-magic";
-          # };
+          initExtra = ''
+            set -e SSH_AGENT_PID
+            set -x GPG_TTY $(tty)
+            set -x SSH_AUTH_SOCK (gpgconf --list-dirs agent-ssh-socket) 
+          '';
+          oh-my-zsh = {
+            enable = true;
+            plugins = [
+              "git"
+              "history"
+              "history-substring-search"
+              "golang"
+              "rust"
+              "docker"
+              #"zsh-autosuggestions"
+              "ssh-agent"
+            ];
+            theme = "af-magic";
+
+
+          };
+      };
+
+      programs.gpg = {
+        enable = true;
+
+        publicKeys = [
+          {
+            source = ./yubikey-c.gpg;
+            trust = 5;
+          }
+        ];
+      };
+
+      #services.gpg-agent = {
+      #  enable = true;
+      #  enableSshSupport = true;
+      #  enableZshIntegration = true;
+      #  enableScDaemon = true;
+      #};
+
+      programs.git = {
+        enable = true;
+
       };
     };
   in
