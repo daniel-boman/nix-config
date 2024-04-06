@@ -43,7 +43,6 @@
           pkgs.rustup
           pkgs.gh
           pkgs.helix
-          pkgs.zellij
           #pkgs.zsh-autosuggestions
       ];
 
