@@ -39,6 +39,10 @@
           pkgs.neofetch 
           pkgs.zsh 
           pkgs.oh-my-zsh
+          pkgs.micro
+          pkgs.rustup
+          pkgs.gh
+          pkgs.helix
           #pkgs.zsh-autosuggestions
       ];
 
