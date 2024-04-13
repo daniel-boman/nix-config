@@ -113,6 +113,9 @@
           profileExtra = ''
               export GPG_TTY=$(tty)
           '';
+          initExtra = ''
+              export CARGO_TARGET_DIR=$HOME/.cargo-target-cache
+          '';
           oh-my-zsh = {
             enable = true;
             plugins = [
