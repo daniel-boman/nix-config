@@ -12,11 +12,13 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    mac-app-util.url = "github:hraban/mac-app-util";
   };
 
-  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager }:
+  outputs = inputs@{ self, nix-darwin, nixpkgs, home-manager, mac-app-util }:
   let
-    configuration = { pkgs, ... }: {
+    configuration = { pkgs, lib, config, ... }: {
       # List packages installed in system profile. To search by name, run:
       # $ nix-env -qaP | grep wget
 
@@ -25,6 +27,7 @@
       # Auto upgrade nix package and the daemon service.
       services.nix-daemon.enable = true;
       # nix.package = pkgs.nix;
+      
 
       # Necessary for using flakes on this system.
       nix.settings.experimental-features = "nix-command flakes";
@@ -43,6 +46,7 @@
           pkgs.rustup
           pkgs.gh
           pkgs.helix
+          pkgs.yabai          
           #pkgs.zsh-autosuggestions
       ];
 
@@ -68,10 +72,57 @@
 
       system.defaults = {
         finder.AppleShowAllExtensions = true;
-        
+        NSGlobalDomain.InitialKeyRepeat = 10;
+        NSGlobalDomain.KeyRepeat = 4;
       };
 
-      
+      services.yabai = {
+      	enable = false;
+      	enableScriptingAddition = true;
+   		config = {
+   		  focus_follows_mouse          = "autoraise";
+   		  mouse_follows_focus          = "off";
+   		  window_placement             = "second_child";
+   		  window_opacity               = "off";
+   		  window_opacity_duration      = "0.0";
+   		  window_border                = "on";
+   		  window_border_placement      = "inset";
+   		  window_border_width          = 2;
+   		  window_border_radius         = 3;
+   		  active_window_border_topmost = "off";
+   		  window_topmost               = "on";
+   		  window_shadow                = "float";
+   		  active_window_border_color   = "0xff5c7e81";
+   		  normal_window_border_color   = "0xff505050";
+   		  insert_window_border_color   = "0xffd75f5f";
+   		  active_window_opacity        = "1.0";
+   		  normal_window_opacity        = "1.0";
+   		  split_ratio                  = "0.50";
+   		  auto_balance                 = "on";
+   		  mouse_modifier               = "fn";
+   		  mouse_action1                = "move";
+   		  mouse_action2                = "resize";
+   		  layout                       = "bsp";
+   		  top_padding                  = 36;
+   		  bottom_padding               = 10;
+   		  left_padding                 = 10;
+   		  right_padding                = 10;
+   		  window_gap                   = 10;
+   		};
+      };
+    services.skhd = {
+    	enable = true;
+    	skhdConfig = ''
+    		ctrl + alt - left : yabai -m window --focus west
+    		ctrl + alt - right : yabai -m window --focus east
+    		ctrl + alt - down : yabai -m window --focus south
+    		ctrl + alt - up : yabai -m window --focus north
+    		ctrl + alt - v : yabai -m window --toggle float --grid 4:4:1:1:2:2
+    		ctrl + alt - t : alacritty
+    		
+    		
+    	'';
+    };
 
       
     };
@@ -101,7 +152,8 @@
           autosuggestion.enable = true;
           syntaxHighlighting.enable = true;
           shellAliases = {
-            update = "darwin-rebuild switch --flake ~/.config/nix";
+            rebuild = "darwin-rebuild switch --flake ~/.config/nix";
+            update = "(cd ~/.config/nix && nix flake update)";
           };
           #initExtra = ''
           #  set -e SSH_AGENT_PID
@@ -134,6 +186,18 @@
           };
       };
 
+      programs.alacritty = {
+        enable = true;
+        settings = {
+          window = {
+            #decorations = "Transparent";
+            blur = true;
+          };
+          font = {
+            size = 14.0;
+          };
+        };
+      };
       programs.gpg = {
         enable = true;
 
@@ -162,10 +226,9 @@
           signByDefault = true;
           key = "C30B 055A 68C6 D657 1EF0  6133 5928 A043 6DB7 7DA6";
         };
-
-
-
       };
+
+      
     };
   in
   {
@@ -179,8 +242,12 @@
           home-manager.useUserPackages = true;
           home-manager.verbose = true;
           home-manager.users."danielboman" = homeconfig;
-   
+
+          home-manager.sharedModules = [
+            mac-app-util.homeManagerModules.default
+          ];
         }
+        mac-app-util.darwinModules.default
       ];
       specialArgs = { inherit inputs; };
     };
