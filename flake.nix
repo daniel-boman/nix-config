@@ -36,18 +36,20 @@
       programs.zsh.enable = true;
       # programs.fish.enable = true;
 
-      environment.systemPackages = [ 
-          pkgs.vim
-          pkgs.nil
-          pkgs.neofetch 
-          pkgs.zsh 
-          pkgs.oh-my-zsh
-          pkgs.micro
-          pkgs.rustup
-          pkgs.gh
-          pkgs.helix
-          pkgs.yabai          
-          #pkgs.zsh-autosuggestions
+      environment.systemPackages = with pkgs; [ 
+          vim
+          nil
+          neofetch 
+          zsh 
+          oh-my-zsh
+          micro
+          rustup
+          gh
+          helix
+          yabai
+          nodejs
+          oha
+          redis
       ];
 
   
@@ -72,8 +74,9 @@
 
       system.defaults = {
         finder.AppleShowAllExtensions = true;
-        NSGlobalDomain.InitialKeyRepeat = 10;
-        NSGlobalDomain.KeyRepeat = 4;
+        finder.AppleShowAllFiles = true;
+        NSGlobalDomain.InitialKeyRepeat = 15;
+        NSGlobalDomain.KeyRepeat = 6;
       };
       
     };
@@ -118,6 +121,7 @@
           '';
           initExtra = ''
               export CARGO_TARGET_DIR=$HOME/.cargo-target-cache
+              export PATH=$PATH:$HOME/bin
           '';
           oh-my-zsh = {
             enable = true;
