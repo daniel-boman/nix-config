@@ -27,7 +27,7 @@
       # Auto upgrade nix package and the daemon service.
       services.nix-daemon.enable = true;
       # nix.package = pkgs.nix;
-      
+
 
       # Necessary for using flakes on this system.
       nix.settings.experimental-features = "nix-command flakes";
@@ -36,23 +36,21 @@
       programs.zsh.enable = true;
       # programs.fish.enable = true;
 
-      environment.systemPackages = with pkgs; [ 
+      environment.systemPackages = with pkgs; [
           vim
           nil
-          neofetch 
-          zsh 
+          neofetch
+          zsh
           oh-my-zsh
           micro
           rustup
           gh
           helix
-          yabai
-          nodejs
-          oha
-          redis
+          talosctl
+          kubectl
       ];
 
-  
+
 
       # Set Git commit hash for darwin-version.
       system.configurationRevision = self.rev or self.dirtyRev or null;
@@ -78,7 +76,7 @@
         NSGlobalDomain.InitialKeyRepeat = 15;
         NSGlobalDomain.KeyRepeat = 6;
       };
-      
+
     };
     homeconfig = {pkgs, ...}: {
       home.stateVersion = "23.05";
@@ -89,7 +87,7 @@
       home.sessionVariables = {
         # TODO
       };
-      
+
       home = {
         file = {
           #".zshrc" = {
@@ -141,7 +139,7 @@
       };
 
       programs.alacritty = {
-        enable = true;
+        enable = false;
         settings = {
           window = {
             blur = true;
@@ -171,7 +169,7 @@
 
       programs.git = {
         enable = true;
-        
+
         userEmail = "daniel.boman@pm.me";
         userName = "Daniel Boman";
 
@@ -181,15 +179,15 @@
         };
       };
 
-      
+
     };
   in
   {
     # Build darwin flake using:
     # $ darwin-rebuild build --flake .#simple
     darwinConfigurations."Daniels-MacBook-Air" = nix-darwin.lib.darwinSystem {
-      modules = [ 
-        configuration 
+      modules = [
+        configuration
         home-manager.darwinModules.home-manager {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
@@ -208,7 +206,7 @@
     # Expose the package set, including overlays, for convenience.
     darwinPackages = self.darwinConfigurations."Daniels-MacBook-Air".pkgs;
 
-    
-    
+
+
   };
 }
