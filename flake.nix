@@ -38,7 +38,7 @@
 
       environment.systemPackages = with pkgs; [
           vim
-          nil
+          nixd
           neofetch
           zsh
           oh-my-zsh
@@ -48,8 +48,10 @@
           helix
           talosctl
           kubectl
+          jetbrains.goland
       ];
 
+      nixpkgs.config.allowUnfree = true;
 
 
       # Set Git commit hash for darwin-version.
@@ -68,13 +70,20 @@
       };
 
 
+
       security.pam.enableSudoTouchIdAuth = true;
 
       system.defaults = {
         finder.AppleShowAllExtensions = true;
         finder.AppleShowAllFiles = true;
+
         NSGlobalDomain.InitialKeyRepeat = 15;
         NSGlobalDomain.KeyRepeat = 6;
+
+        CustomUserPreferences = {
+
+          "com.apple.TextEdit" = {"com.apple.TextEdit.NSShowAppCentricOpenPanelInsteadOfUntitledFile" = true;};
+        };
       };
 
     };
@@ -86,6 +95,7 @@
 
       home.sessionVariables = {
         # TODO
+        NIXD_FLAGS = "-log=error";
       };
 
       home = {
@@ -174,7 +184,7 @@
         userName = "Daniel Boman";
 
         signing = {
-          signByDefault = true;
+          signByDefault = false;
           key = "C30B 055A 68C6 D657 1EF0  6133 5928 A043 6DB7 7DA6";
         };
       };
