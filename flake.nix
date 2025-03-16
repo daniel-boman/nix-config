@@ -49,7 +49,12 @@
           kubectl
           jetbrains.goland
           raycast
+          go
+          colima
+          docker
+          docker-compose
         ];
+
 
         nixpkgs.config.allowUnfree = true;
 
@@ -99,7 +104,9 @@
         };
 
         home = { file = { }; };
+
         programs.zed-editor = import ./zed { inherit pkgs; };
+
         programs.zsh = {
           enable = true;
           autosuggestion.enable = true;
@@ -117,6 +124,7 @@
 
           profileExtra = ''
             export GPG_TTY=$(tty)
+
           '';
           initExtra = ''
             export CARGO_TARGET_DIR=$HOME/.cargo-target-cache
@@ -132,6 +140,7 @@
               "rust"
               "docker"
               "ssh-agent"
+              "direnv"
             ];
             theme = "af-magic";
 
