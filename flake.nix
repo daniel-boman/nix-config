@@ -22,10 +22,13 @@
         # List packages installed in system profile. To search by name, run:
         # $ nix-env -qaP | grep wget
 
+        ids.gids.nixbld = 350;
         # Auto upgrade nix package and the daemon service.
-        services.nix-daemon.enable = true;
+        #services.nix-daemon.enable = true;
+
         # nix.package = pkgs.nix;
 
+        nix.enable = true;
         # Necessary for using flakes on this system.
         nix.settings.experimental-features = "nix-command flakes";
 
@@ -53,6 +56,8 @@
           colima
           docker
           docker-compose
+          ngrok
+          spotify
         ];
 
 
@@ -73,11 +78,15 @@
           home = "/Users/daniel";
         };
 
-        security.pam.enableSudoTouchIdAuth = true;
+        #security.pam.enableSudoTouchIdAuth = true;
+        security.pam.services.sudo_local.touchIdAuth = true;
 
         system.defaults = {
           finder.AppleShowAllExtensions = true;
           finder.AppleShowAllFiles = true;
+          finder._FXShowPosixPathInTitle = true;
+          finder.ShowStatusBar = true;
+          loginwindow.GuestEnabled = false;
 
           NSGlobalDomain.InitialKeyRepeat = 15;
           NSGlobalDomain.KeyRepeat = 2;
@@ -140,7 +149,7 @@
               "rust"
               "docker"
               "ssh-agent"
-              "direnv"
+             # "direnv"
             ];
             theme = "af-magic";
 
@@ -175,7 +184,6 @@
 
           userEmail = "daniel.boman@pm.me";
           userName = "Daniel Boman";
-
           signing = {
             signByDefault = false;
             key = "C30B 055A 68C6 D657 1EF0  6133 5928 A043 6DB7 7DA6";
